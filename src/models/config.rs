@@ -353,6 +353,7 @@ pub enum DnsServer {
 /// Enum wrapper for different node configurations
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
+#[allow(clippy::large_enum_variant)]
 pub enum NodeConfigEnum {
     Trojan(TrojanConfig),
     ShadowSocks(ShadowsocksConfig),

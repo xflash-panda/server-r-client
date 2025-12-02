@@ -79,7 +79,10 @@ impl ApiClient {
             url.push('?');
             let params_str: Vec<String> = query_params
                 .iter()
-                .map(|(k, v)| format!("{}={}", k, urlencoding::encode(v)))
+                .map(|(k, v)| {
+                    let encoded: String = url::form_urlencoded::byte_serialize(v.as_bytes()).collect();
+                    format!("{}={}", k, encoded)
+                })
                 .collect();
             url.push_str(&params_str.join("&"));
         }
@@ -402,12 +405,5 @@ impl std::fmt::Debug for ApiClient {
             .field("timeout", &self.config.timeout)
             .field("debug", &self.config.debug)
             .finish()
-    }
-}
-
-// URL encoding helper
-mod urlencoding {
-    pub fn encode(s: &str) -> String {
-        url::form_urlencoded::byte_serialize(s.as_bytes()).collect()
     }
 }

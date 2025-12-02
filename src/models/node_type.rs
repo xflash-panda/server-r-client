@@ -14,6 +14,7 @@ pub enum NodeType {
     VMess,
     #[serde(rename = "anytls")]
     AnyTLS,
+    Tuic,
 }
 
 impl NodeType {
@@ -26,6 +27,7 @@ impl NodeType {
             NodeType::Hysteria2 => "hysteria2",
             NodeType::VMess => "vmess",
             NodeType::AnyTLS => "anytls",
+            NodeType::Tuic => "tuic",
         }
     }
 }
@@ -47,6 +49,7 @@ impl std::str::FromStr for NodeType {
             "hysteria2" => Ok(NodeType::Hysteria2),
             "vmess" => Ok(NodeType::VMess),
             "anytls" => Ok(NodeType::AnyTLS),
+            "tuic" => Ok(NodeType::Tuic),
             _ => Err(format!("Unknown node type: {}", s)),
         }
     }

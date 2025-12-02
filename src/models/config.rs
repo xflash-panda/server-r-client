@@ -202,6 +202,31 @@ impl NodeConfig for AnyTLSConfig {
     }
 }
 
+/// TUIC configuration
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TuicConfig {
+    pub id: i64,
+    pub server_port: u16,
+    #[serde(default)]
+    pub allow_insecure: bool,
+    #[serde(default)]
+    pub server_name: Option<String>,
+}
+
+impl NodeConfig for TuicConfig {
+    fn type_name(&self) -> &'static str {
+        "tuic"
+    }
+
+    fn id(&self) -> i64 {
+        self.id
+    }
+
+    fn server_port(&self) -> u16 {
+        self.server_port
+    }
+}
+
 /// TLS configuration
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct TlsConfig {
@@ -335,6 +360,7 @@ pub enum NodeConfigEnum {
     Hysteria2(Hysteria2Config),
     VMess(VMessConfig),
     AnyTLS(AnyTLSConfig),
+    Tuic(TuicConfig),
 }
 
 impl NodeConfigEnum {
@@ -386,6 +412,14 @@ impl NodeConfigEnum {
         }
     }
 
+    /// Try to convert to TuicConfig
+    pub fn as_tuic(&self) -> Result<&TuicConfig> {
+        match self {
+            NodeConfigEnum::Tuic(config) => Ok(config),
+            _ => Err(ApiError::type_conversion_error("TuicConfig", self.type_name())),
+        }
+    }
+
     /// Get the type name
     pub fn type_name(&self) -> &'static str {
         match self {
@@ -395,6 +429,7 @@ impl NodeConfigEnum {
             NodeConfigEnum::Hysteria2(_) => "hysteria2",
             NodeConfigEnum::VMess(_) => "vmess",
             NodeConfigEnum::AnyTLS(_) => "anytls",
+            NodeConfigEnum::Tuic(_) => "tuic",
         }
     }
 }
@@ -431,6 +466,11 @@ pub fn parse_config(node_type: NodeType, data: &[u8]) -> Result<NodeConfigEnum> 
             let config: AnyTLSConfig = serde_json::from_slice(data)
                 .map_err(|e| ApiError::parse_error(e.to_string(), "", Some(e)))?;
             NodeConfigEnum::AnyTLS(config)
+        }
+        NodeType::Tuic => {
+            let config: TuicConfig = serde_json::from_slice(data)
+                .map_err(|e| ApiError::parse_error(e.to_string(), "", Some(e)))?;
+            NodeConfigEnum::Tuic(config)
         }
     };
     Ok(config)

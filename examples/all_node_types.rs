@@ -23,6 +23,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         NodeType::Hysteria2,
         NodeType::VMess,
         NodeType::AnyTLS,
+        NodeType::Tuic,
     ];
 
     println!("--- Supported node types ---\n");
@@ -34,7 +35,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Parse node types from string
     println!("\n--- Parse node types from string ---\n");
 
-    let strings = ["trojan", "shadowsocks", "ss", "hysteria", "hysteria2", "vmess", "anytls"];
+    let strings = ["trojan", "shadowsocks", "ss", "hysteria", "hysteria2", "vmess", "anytls", "tuic"];
     for s in &strings {
         match s.parse::<NodeType>() {
             Ok(nt) => println!("'{}' -> {:?}", s, nt),
@@ -85,6 +86,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         if let Ok(c) = config.as_anytls() {
                             println!("  Port: {}, ServerName: {:?}",
                                 c.server_port, c.server_name);
+                        }
+                    }
+                    NodeType::Tuic => {
+                        if let Ok(c) = config.as_tuic() {
+                            println!("  Port: {}, ServerName: {:?}, AllowInsecure: {}",
+                                c.server_port, c.server_name, c.allow_insecure);
                         }
                     }
                 }

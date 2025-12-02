@@ -80,7 +80,8 @@ impl ApiClient {
             let params_str: Vec<String> = query_params
                 .iter()
                 .map(|(k, v)| {
-                    let encoded: String = url::form_urlencoded::byte_serialize(v.as_bytes()).collect();
+                    let encoded: String =
+                        url::form_urlencoded::byte_serialize(v.as_bytes()).collect();
                     format!("{}={}", k, encoded)
                 })
                 .collect();
@@ -110,7 +111,12 @@ impl ApiClient {
     }
 
     /// Make a GET request with ETag support
-    async fn get_with_etag(&self, path: &str, params: &[(&str, &str)], cache_key: &str) -> Result<Response> {
+    async fn get_with_etag(
+        &self,
+        path: &str,
+        params: &[(&str, &str)],
+        cache_key: &str,
+    ) -> Result<Response> {
         let url = self.build_url(path, params);
 
         if self.config.debug {
@@ -151,7 +157,12 @@ impl ApiClient {
     }
 
     /// Make a POST request with JSON body
-    async fn post<T: serde::Serialize>(&self, path: &str, params: &[(&str, &str)], body: &T) -> Result<Response> {
+    async fn post<T: serde::Serialize>(
+        &self,
+        path: &str,
+        params: &[(&str, &str)],
+        body: &T,
+    ) -> Result<Response> {
         let url = self.build_url(path, params);
 
         if self.config.debug {
@@ -233,7 +244,12 @@ impl ApiClient {
     // ==================== Node Management APIs ====================
 
     /// Register a node with the server
-    pub async fn register(&self, node_type: NodeType, node_id: i64, request: RegisterRequest) -> Result<String> {
+    pub async fn register(
+        &self,
+        node_type: NodeType,
+        node_id: i64,
+        request: RegisterRequest,
+    ) -> Result<String> {
         let path = format!("/api/v1/server/enhanced/{}/register", node_type);
         let node_id_str = node_id.to_string();
         let params = [("node_id", node_id_str.as_str())];
@@ -312,7 +328,11 @@ impl ApiClient {
     }
 
     /// Get users with ETag information
-    pub async fn users_with_etag(&self, node_type: NodeType, register_id: &str) -> Result<UsersResponse<Vec<User>>> {
+    pub async fn users_with_etag(
+        &self,
+        node_type: NodeType,
+        register_id: &str,
+    ) -> Result<UsersResponse<Vec<User>>> {
         let path = format!("/api/v1/server/enhanced/{}/users", node_type);
         let params = [("register_id", register_id)];
         let cache_key = format!("{}:{}", node_type, register_id);
@@ -338,7 +358,12 @@ impl ApiClient {
     // ==================== Traffic/Statistics APIs ====================
 
     /// Submit user traffic data
-    pub async fn submit(&self, node_type: NodeType, register_id: &str, data: Vec<UserTraffic>) -> Result<()> {
+    pub async fn submit(
+        &self,
+        node_type: NodeType,
+        register_id: &str,
+        data: Vec<UserTraffic>,
+    ) -> Result<()> {
         let path = format!("/api/v1/server/enhanced/{}/submit", node_type);
         let request = SubmitRequest::new(register_id, data);
 
@@ -347,7 +372,12 @@ impl ApiClient {
     }
 
     /// Submit traffic data with agent information
-    pub async fn submit_with_agent(&self, node_type: NodeType, register_id: &str, data: Vec<UserTraffic>) -> Result<()> {
+    pub async fn submit_with_agent(
+        &self,
+        node_type: NodeType,
+        register_id: &str,
+        data: Vec<UserTraffic>,
+    ) -> Result<()> {
         let path = format!("/api/v1/server/enhanced/{}/submitWithAgent", node_type);
         let request = SubmitRequest::new(register_id, data);
 
@@ -356,7 +386,12 @@ impl ApiClient {
     }
 
     /// Submit aggregated traffic statistics
-    pub async fn submit_stats_with_agent(&self, node_type: NodeType, register_id: &str, data: TrafficStats) -> Result<()> {
+    pub async fn submit_stats_with_agent(
+        &self,
+        node_type: NodeType,
+        register_id: &str,
+        data: TrafficStats,
+    ) -> Result<()> {
         let path = format!("/api/v1/server/enhanced/{}/submitStatsWithAgent", node_type);
         let request = SubmitStatsRequest::new(register_id, data);
 
@@ -376,7 +411,12 @@ impl ApiClient {
     }
 
     /// Send heartbeat with node IP
-    pub async fn heartbeat_with_ip(&self, node_type: NodeType, register_id: &str, node_ip: &str) -> Result<()> {
+    pub async fn heartbeat_with_ip(
+        &self,
+        node_type: NodeType,
+        register_id: &str,
+        node_ip: &str,
+    ) -> Result<()> {
         let path = format!("/api/v1/server/enhanced/{}/heartbeat", node_type);
         let request = HeartbeatRequest::new(register_id).with_node_ip(node_ip);
 

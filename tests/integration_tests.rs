@@ -1,7 +1,7 @@
 use server_r_client::{
-    ApiClient, ApiError, Config, NodeType, RegisterRequest, TrafficStats, UserTraffic,
-    TrojanConfig, ShadowsocksConfig, HysteriaConfig, Hysteria2Config, VMessConfig, AnyTLSConfig,
-    NodeConfigEnum,
+    AnyTLSConfig, ApiClient, ApiError, Config, Hysteria2Config, HysteriaConfig, NodeConfigEnum,
+    NodeType, RegisterRequest, ShadowsocksConfig, TrafficStats, TrojanConfig, UserTraffic,
+    VMessConfig,
 };
 use std::time::Duration;
 
@@ -223,7 +223,10 @@ fn test_anytls_config_deserialization() {
     assert_eq!(config.id, 6);
     assert_eq!(config.server_port, 443);
     assert!(!config.allow_insecure);
-    assert_eq!(config.padding_rules, Some(vec!["rule1".to_string(), "rule2".to_string()]));
+    assert_eq!(
+        config.padding_rules,
+        Some(vec!["rule1".to_string(), "rule2".to_string()])
+    );
 }
 
 #[test]

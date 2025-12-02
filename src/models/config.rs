@@ -368,7 +368,10 @@ impl NodeConfigEnum {
     pub fn as_trojan(&self) -> Result<&TrojanConfig> {
         match self {
             NodeConfigEnum::Trojan(config) => Ok(config),
-            _ => Err(ApiError::type_conversion_error("TrojanConfig", self.type_name())),
+            _ => Err(ApiError::type_conversion_error(
+                "TrojanConfig",
+                self.type_name(),
+            )),
         }
     }
 
@@ -376,7 +379,10 @@ impl NodeConfigEnum {
     pub fn as_shadowsocks(&self) -> Result<&ShadowsocksConfig> {
         match self {
             NodeConfigEnum::ShadowSocks(config) => Ok(config),
-            _ => Err(ApiError::type_conversion_error("ShadowsocksConfig", self.type_name())),
+            _ => Err(ApiError::type_conversion_error(
+                "ShadowsocksConfig",
+                self.type_name(),
+            )),
         }
     }
 
@@ -384,7 +390,10 @@ impl NodeConfigEnum {
     pub fn as_hysteria(&self) -> Result<&HysteriaConfig> {
         match self {
             NodeConfigEnum::Hysteria(config) => Ok(config),
-            _ => Err(ApiError::type_conversion_error("HysteriaConfig", self.type_name())),
+            _ => Err(ApiError::type_conversion_error(
+                "HysteriaConfig",
+                self.type_name(),
+            )),
         }
     }
 
@@ -392,7 +401,10 @@ impl NodeConfigEnum {
     pub fn as_hysteria2(&self) -> Result<&Hysteria2Config> {
         match self {
             NodeConfigEnum::Hysteria2(config) => Ok(config),
-            _ => Err(ApiError::type_conversion_error("Hysteria2Config", self.type_name())),
+            _ => Err(ApiError::type_conversion_error(
+                "Hysteria2Config",
+                self.type_name(),
+            )),
         }
     }
 
@@ -400,7 +412,10 @@ impl NodeConfigEnum {
     pub fn as_vmess(&self) -> Result<&VMessConfig> {
         match self {
             NodeConfigEnum::VMess(config) => Ok(config),
-            _ => Err(ApiError::type_conversion_error("VMessConfig", self.type_name())),
+            _ => Err(ApiError::type_conversion_error(
+                "VMessConfig",
+                self.type_name(),
+            )),
         }
     }
 
@@ -408,7 +423,10 @@ impl NodeConfigEnum {
     pub fn as_anytls(&self) -> Result<&AnyTLSConfig> {
         match self {
             NodeConfigEnum::AnyTLS(config) => Ok(config),
-            _ => Err(ApiError::type_conversion_error("AnyTLSConfig", self.type_name())),
+            _ => Err(ApiError::type_conversion_error(
+                "AnyTLSConfig",
+                self.type_name(),
+            )),
         }
     }
 
@@ -416,7 +434,10 @@ impl NodeConfigEnum {
     pub fn as_tuic(&self) -> Result<&TuicConfig> {
         match self {
             NodeConfigEnum::Tuic(config) => Ok(config),
-            _ => Err(ApiError::type_conversion_error("TuicConfig", self.type_name())),
+            _ => Err(ApiError::type_conversion_error(
+                "TuicConfig",
+                self.type_name(),
+            )),
         }
     }
 

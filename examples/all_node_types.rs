@@ -35,7 +35,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Parse node types from string
     println!("\n--- Parse node types from string ---\n");
 
-    let strings = ["trojan", "shadowsocks", "ss", "hysteria", "hysteria2", "vmess", "anytls", "tuic"];
+    let strings = [
+        "trojan",
+        "shadowsocks",
+        "ss",
+        "hysteria",
+        "hysteria2",
+        "vmess",
+        "anytls",
+        "tuic",
+    ];
     for s in &strings {
         match s.parse::<NodeType>() {
             Ok(nt) => println!("'{}' -> {:?}", s, nt),
@@ -56,7 +65,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 match node_type {
                     NodeType::Trojan => {
                         if let Ok(c) = config.as_trojan() {
-                            println!("  Port: {}, AllowInsecure: {}", c.server_port, c.allow_insecure);
+                            println!(
+                                "  Port: {}, AllowInsecure: {}",
+                                c.server_port, c.allow_insecure
+                            );
                         }
                     }
                     NodeType::ShadowSocks => {
@@ -66,32 +78,39 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     }
                     NodeType::Hysteria => {
                         if let Ok(c) = config.as_hysteria() {
-                            println!("  Port: {}, Up: {:?}Mbps, Down: {:?}Mbps",
-                                c.server_port, c.up_mbps, c.down_mbps);
+                            println!(
+                                "  Port: {}, Up: {:?}Mbps, Down: {:?}Mbps",
+                                c.server_port, c.up_mbps, c.down_mbps
+                            );
                         }
                     }
                     NodeType::Hysteria2 => {
                         if let Ok(c) = config.as_hysteria2() {
-                            println!("  Port: {}, IgnoreCliBandwidth: {}",
-                                c.server_port, c.ignore_cli_bandwidth);
+                            println!(
+                                "  Port: {}, IgnoreCliBandwidth: {}",
+                                c.server_port, c.ignore_cli_bandwidth
+                            );
                         }
                     }
                     NodeType::VMess => {
                         if let Ok(c) = config.as_vmess() {
-                            println!("  Port: {}, TLS: {}, Network: {:?}",
-                                c.server_port, c.tls, c.network);
+                            println!(
+                                "  Port: {}, TLS: {}, Network: {:?}",
+                                c.server_port, c.tls, c.network
+                            );
                         }
                     }
                     NodeType::AnyTLS => {
                         if let Ok(c) = config.as_anytls() {
-                            println!("  Port: {}, ServerName: {:?}",
-                                c.server_port, c.server_name);
+                            println!("  Port: {}, ServerName: {:?}", c.server_port, c.server_name);
                         }
                     }
                     NodeType::Tuic => {
                         if let Ok(c) = config.as_tuic() {
-                            println!("  Port: {}, ServerName: {:?}, AllowInsecure: {}",
-                                c.server_port, c.server_name, c.allow_insecure);
+                            println!(
+                                "  Port: {}, ServerName: {:?}, AllowInsecure: {}",
+                                c.server_port, c.server_name, c.allow_insecure
+                            );
                         }
                     }
                 }

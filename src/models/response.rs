@@ -10,7 +10,10 @@ pub struct ApiResponse<T> {
 
 impl<T> ApiResponse<T> {
     pub fn new(data: T) -> Self {
-        Self { data, message: None }
+        Self {
+            data,
+            message: None,
+        }
     }
 
     pub fn with_message(data: T, message: impl Into<String>) -> Self {

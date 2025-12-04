@@ -211,6 +211,8 @@ pub struct TuicConfig {
     pub allow_insecure: bool,
     #[serde(default)]
     pub server_name: Option<String>,
+    #[serde(default)]
+    pub zero_rtt_handshake: bool,
 }
 
 impl NodeConfig for TuicConfig {

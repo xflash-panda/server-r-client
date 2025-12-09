@@ -58,6 +58,7 @@ impl ApiClient {
     pub fn new(config: Config) -> Result<Self> {
         let http_client = HttpClient::builder()
             .timeout(config.timeout)
+            .no_proxy()
             .build()
             .map_err(|e| ApiError::config_error(format!("Failed to create HTTP client: {}", e)))?;
 

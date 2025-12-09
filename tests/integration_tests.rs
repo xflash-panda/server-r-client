@@ -1,7 +1,7 @@
 use server_r_client::{
     AnyTLSConfig, ApiClient, ApiError, Config, Hysteria2Config, HysteriaConfig, NodeConfigEnum,
-    NodeType, RegisterRequest, ShadowsocksConfig, TrafficStats, TrojanConfig, UserTraffic,
-    VMessConfig,
+    NodeType, RegisterRequest, ShadowsocksConfig, TrafficStats, TrojanConfig, TuicConfig,
+    UserTraffic, VMessConfig,
 };
 use std::time::Duration;
 
@@ -284,4 +284,79 @@ fn test_traffic_stats_serialization() {
     let json = serde_json::to_string(&stats).unwrap();
     assert!(json.contains("\"count\":1"));
     assert!(json.contains("\"requests\":100"));
+}
+
+#[test]
+fn test_tuic_config_deserialization() {
+    let json = r#"{
+        "id": 1,
+        "server_port": 44442,
+        "zero_rtt_handshake": true
+    }"#;
+
+    let config: TuicConfig = serde_json::from_str(json).unwrap();
+    assert_eq!(config.id, 1);
+    assert_eq!(config.server_port, 44442);
+    assert!(config.zero_rtt_handshake);
+}
+
+// Real integration tests - run with: cargo test --test integration_tests real_ -- --ignored --nocapture
+// Requires API server running at http://127.0.0.1:8080
+
+#[tokio::test]
+#[ignore]
+async fn real_test_tuic_config() {
+    // Initialize tracing for debug output
+    let _ = tracing_subscriber::fmt()
+        .with_max_level(tracing::Level::DEBUG)
+        .try_init();
+
+    let config = Config::new("http://127.0.0.1:8080", "test")
+        .with_timeout(Duration::from_secs(10))
+        .with_debug(true);
+
+    let client = ApiClient::new(config).expect("Failed to create client");
+
+    let node_type = NodeType::Tuic;
+    let node_id = 1;
+
+    // Test raw config first (simpler)
+    println!("\n=== Testing raw config (type=tuic, node_id=1) ===");
+    match client.raw_config(node_type, node_id).await {
+        Ok(bytes) => {
+            let json_str = String::from_utf8_lossy(&bytes);
+            println!("✓ Got raw config successfully");
+            println!("  Raw: {}", json_str);
+            assert!(json_str.contains("tuic"));
+        }
+        Err(e) => {
+            println!("✗ Failed to get raw config: {}", e);
+            panic!("Failed to get raw config: {}", e);
+        }
+    }
+
+    // Test parsed config
+    println!("\n=== Testing parsed config (type=tuic, node_id=1) ===");
+    match client.config(node_type, node_id).await {
+        Ok(config) => {
+            println!("✓ Got parsed config successfully");
+            println!("  Node type: {}", config.type_name());
+
+            match config.as_tuic() {
+                Ok(tuic) => {
+                    println!("  ID: {}", tuic.id);
+                    println!("  Server port: {}", tuic.server_port);
+                    println!("  Zero RTT handshake: {}", tuic.zero_rtt_handshake);
+                    assert_eq!(tuic.id, 1);
+                }
+                Err(e) => panic!("Expected TUIC config but got: {}", e),
+            }
+        }
+        Err(e) => {
+            println!("✗ Failed to get parsed config: {}", e);
+            panic!("Failed to get parsed config: {}", e);
+        }
+    }
+
+    println!("\n✓ All TUIC config tests passed!");
 }

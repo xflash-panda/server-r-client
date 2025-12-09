@@ -1,8 +1,47 @@
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 use std::collections::HashMap;
 
 use crate::error::{ApiError, Result};
 use crate::models::NodeType;
+
+/// Deserialize a boolean that might come as an integer (0/1)
+fn bool_from_int<'de, D>(deserializer: D) -> std::result::Result<bool, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    #[derive(Deserialize)]
+    #[serde(untagged)]
+    enum BoolOrInt {
+        Bool(bool),
+        Int(i64),
+    }
+
+    match BoolOrInt::deserialize(deserializer)? {
+        BoolOrInt::Bool(b) => Ok(b),
+        BoolOrInt::Int(i) => Ok(i != 0),
+    }
+}
+
+/// Deserialize an optional boolean that might come as an integer (0/1)
+#[allow(dead_code)]
+fn option_bool_from_int<'de, D>(deserializer: D) -> std::result::Result<Option<bool>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    #[derive(Deserialize)]
+    #[serde(untagged)]
+    enum BoolOrInt {
+        Bool(bool),
+        Int(i64),
+    }
+
+    Option::<BoolOrInt>::deserialize(deserializer).map(|opt| {
+        opt.map(|v| match v {
+            BoolOrInt::Bool(b) => b,
+            BoolOrInt::Int(i) => i != 0,
+        })
+    })
+}
 
 /// Base trait for all node configurations
 pub trait NodeConfig: Send + Sync {
@@ -207,11 +246,11 @@ impl NodeConfig for AnyTLSConfig {
 pub struct TuicConfig {
     pub id: i64,
     pub server_port: u16,
-    #[serde(default)]
+    #[serde(default, deserialize_with = "bool_from_int")]
     pub allow_insecure: bool,
     #[serde(default)]
     pub server_name: Option<String>,
-    #[serde(default)]
+    #[serde(default, deserialize_with = "bool_from_int")]
     pub zero_rtt_handshake: bool,
 }
 

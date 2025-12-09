@@ -30,11 +30,8 @@ pub struct RegisterResponseData {
     pub register_id: String,
 }
 
-/// Verify response data
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct VerifyResponseData {
-    pub valid: bool,
-}
+// Verify response data is a plain boolean inside ApiResponse: { "data": true }
+pub type VerifyResponseData = bool;
 
 /// Empty response data (for operations that don't return data)
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]

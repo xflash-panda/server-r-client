@@ -291,7 +291,7 @@ impl ApiClient {
         let api_response: VerifyResponse = serde_json::from_slice(&bytes)
             .map_err(|e| ApiError::parse_error(e.to_string(), &path, Some(e)))?;
 
-        Ok(api_response.data.valid)
+        Ok(api_response.data)
     }
 
     // ==================== User Management APIs ====================

@@ -538,3 +538,21 @@ pub fn parse_config(node_type: NodeType, data: &[u8]) -> Result<NodeConfigEnum> 
     };
     Ok(config)
 }
+
+/// Parse configuration from API response with `{"data": ...}` wrapper
+///
+/// This function handles the standard API response format where the actual
+/// config is wrapped in a `data` field. Use this for parsing raw API responses.
+///
+/// For parsing unwrapped config data, use [`parse_config`] instead.
+pub fn parse_raw_config_response(node_type: NodeType, data: &[u8]) -> Result<NodeConfigEnum> {
+    use crate::models::ApiResponse;
+
+    let api_response: ApiResponse<serde_json::Value> = serde_json::from_slice(data)
+        .map_err(|e| ApiError::parse_error(e.to_string(), "", Some(e)))?;
+
+    let config_bytes = serde_json::to_vec(&api_response.data)
+        .map_err(|e| ApiError::parse_error(e.to_string(), "", Some(e)))?;
+
+    parse_config(node_type, &config_bytes)
+}

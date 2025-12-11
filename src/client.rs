@@ -206,7 +206,7 @@ impl ApiClient {
 
     /// Get raw node configuration
     pub async fn raw_config(&self, node_type: NodeType, node_id: i64) -> Result<Vec<u8>> {
-        let path = format!("/api/v1/server/{}/config", node_type);
+        let path = format!("/api/v1/server/enhanced/{}/config", node_type);
         let node_id_str = node_id.to_string();
         let params = [("node_id", node_id_str.as_str())];
 

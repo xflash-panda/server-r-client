@@ -61,6 +61,8 @@ pub struct TrojanConfig {
     pub id: i64,
     pub server_port: u16,
     #[serde(default)]
+    pub allow_insecure: bool,
+    #[serde(default)]
     pub server_name: Option<String>,
     #[serde(default)]
     pub network: Option<String>,
@@ -218,6 +220,8 @@ pub struct AnyTLSConfig {
     pub id: i64,
     pub server_port: u16,
     #[serde(default)]
+    pub allow_insecure: bool,
+    #[serde(default)]
     pub server_name: Option<String>,
     #[serde(default)]
     pub padding_rules: Option<Vec<String>>,
@@ -242,6 +246,8 @@ impl NodeConfig for AnyTLSConfig {
 pub struct TuicConfig {
     pub id: i64,
     pub server_port: u16,
+    #[serde(default, deserialize_with = "bool_from_int")]
+    pub allow_insecure: bool,
     #[serde(default)]
     pub server_name: Option<String>,
     #[serde(default, deserialize_with = "bool_from_int")]
@@ -267,6 +273,8 @@ impl NodeConfig for TuicConfig {
 pub struct TlsConfig {
     #[serde(default)]
     pub server_name: Option<String>,
+    #[serde(default)]
+    pub allow_insecure: bool,
     #[serde(default)]
     pub certificate: Option<String>,
     #[serde(default)]

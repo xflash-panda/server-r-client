@@ -29,6 +29,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 Ok(trojan) => {
                     println!("  ID: {}", trojan.id);
                     println!("  Server port: {}", trojan.server_port);
+                    println!("  Allow insecure: {}", trojan.allow_insecure);
                     if let Some(ref name) = trojan.server_name {
                         println!("  Server name: {}", name);
                     }

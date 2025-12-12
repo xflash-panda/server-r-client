@@ -1,10 +1,33 @@
 use serde::{Deserialize, Serialize};
 
+use crate::error::{ApiError, Result};
+use crate::models::ApiResponse;
+
 /// User information
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct User {
     pub id: i64,
     pub uuid: String,
+}
+
+/// Unmarshal users from JSON bytes
+///
+/// Parses JSON data in the format `{"data": [...users...]}` and returns the user list.
+///
+/// # Example
+///
+/// ```
+/// use server_r_client::unmarshal_users;
+///
+/// let json = r#"{"data": [{"id": 1, "uuid": "abc-123"}, {"id": 2, "uuid": "def-456"}]}"#;
+/// let users = unmarshal_users(json.as_bytes()).unwrap();
+/// assert_eq!(users.len(), 2);
+/// assert_eq!(users[0].id, 1);
+/// ```
+pub fn unmarshal_users(data: &[u8]) -> Result<Vec<User>> {
+    let response: ApiResponse<Vec<User>> = serde_json::from_slice(data)
+        .map_err(|e| ApiError::parse_error(format!("failed to unmarshal users: {}", e), "", Some(e)))?;
+    Ok(response.data)
 }
 
 /// User traffic data for submission

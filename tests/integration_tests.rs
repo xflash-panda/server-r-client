@@ -134,14 +134,12 @@ fn test_trojan_config_deserialization() {
     let json = r#"{
         "id": 1,
         "server_port": 443,
-        "allow_insecure": false,
         "server_name": "example.com"
     }"#;
 
     let config: TrojanConfig = serde_json::from_str(json).unwrap();
     assert_eq!(config.id, 1);
     assert_eq!(config.server_port, 443);
-    assert!(!config.allow_insecure);
     assert_eq!(config.server_name, Some("example.com".to_string()));
 }
 
@@ -214,7 +212,6 @@ fn test_anytls_config_deserialization() {
     let json = r#"{
         "id": 6,
         "server_port": 443,
-        "allow_insecure": false,
         "server_name": "example.com",
         "padding_rules": ["rule1", "rule2"]
     }"#;
@@ -222,7 +219,7 @@ fn test_anytls_config_deserialization() {
     let config: AnyTLSConfig = serde_json::from_str(json).unwrap();
     assert_eq!(config.id, 6);
     assert_eq!(config.server_port, 443);
-    assert!(!config.allow_insecure);
+    assert_eq!(config.server_name, Some("example.com".to_string()));
     assert_eq!(
         config.padding_rules,
         Some(vec!["rule1".to_string(), "rule2".to_string()])
@@ -234,7 +231,6 @@ fn test_node_config_enum_type_conversion() {
     let trojan = NodeConfigEnum::Trojan(TrojanConfig {
         id: 1,
         server_port: 443,
-        allow_insecure: false,
         server_name: None,
         network: None,
         websocket_config: None,

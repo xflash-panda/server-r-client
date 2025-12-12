@@ -32,7 +32,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             println!("Got config for node type: {}", config.type_name());
             if let Ok(trojan_config) = config.as_trojan() {
                 println!("  Server port: {}", trojan_config.server_port);
-                println!("  Allow insecure: {}", trojan_config.allow_insecure);
             }
         }
         Err(e) => println!("Failed to get config: {}", e),

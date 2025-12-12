@@ -65,10 +65,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 match node_type {
                     NodeType::Trojan => {
                         if let Ok(c) = config.as_trojan() {
-                            println!(
-                                "  Port: {}, AllowInsecure: {}",
-                                c.server_port, c.allow_insecure
-                            );
+                            println!("  Port: {}, ServerName: {:?}", c.server_port, c.server_name);
                         }
                     }
                     NodeType::ShadowSocks => {
@@ -108,8 +105,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     NodeType::Tuic => {
                         if let Ok(c) = config.as_tuic() {
                             println!(
-                                "  Port: {}, ServerName: {:?}, AllowInsecure: {}",
-                                c.server_port, c.server_name, c.allow_insecure
+                                "  Port: {}, ServerName: {:?}, ZeroRttHandshake: {}",
+                                c.server_port, c.server_name, c.zero_rtt_handshake
                             );
                         }
                     }

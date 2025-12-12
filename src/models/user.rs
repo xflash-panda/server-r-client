@@ -25,8 +25,9 @@ pub struct User {
 /// assert_eq!(users[0].id, 1);
 /// ```
 pub fn unmarshal_users(data: &[u8]) -> Result<Vec<User>> {
-    let response: ApiResponse<Vec<User>> = serde_json::from_slice(data)
-        .map_err(|e| ApiError::parse_error(format!("failed to unmarshal users: {}", e), "", Some(e)))?;
+    let response: ApiResponse<Vec<User>> = serde_json::from_slice(data).map_err(|e| {
+        ApiError::parse_error(format!("failed to unmarshal users: {}", e), "", Some(e))
+    })?;
     Ok(response.data)
 }
 
